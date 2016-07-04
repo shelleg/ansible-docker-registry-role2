@@ -1,0 +1,5 @@
+- hosts: local
+  roles:
+    - install_docker_environment
+    - deploy_docker_registry
+

@@ -1,0 +1,5 @@
+---
+
+
+- name: install shipyard
+  command: "curl -sSL https://shipyard-project.com/deploy | ACTION=deploy PORT=9090 PROXY_PORT=2222 bash -s"

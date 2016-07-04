@@ -1,0 +1,4 @@
+---
+# vars file for docker-registry
+vars:
+   http_proxy_: http://<proxy_host>:<proxy_port>
