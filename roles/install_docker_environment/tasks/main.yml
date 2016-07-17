@@ -1,9 +1,0 @@
----
-
-- name: Validate OS is Ubuntu
-  fail: msg="Dev Docker Environment is based on Ubuntu host. Your OS is different. Environment Installation Aboart"
-  when: ansible_distribution != "Ubuntu"
-
-- include: install_docker.yml
-- include: install_docker-compose.yml
-- include: install_shipyard.yml

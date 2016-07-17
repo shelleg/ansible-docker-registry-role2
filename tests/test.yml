@@ -1,0 +1,7 @@
+---
+- hosts: all
+- remote_user: root
+  tasks:
+  - name: "hello world"
+    #shell: "echo hello world"
+    debug: msg="http_proxy {{ http_proxy_ }}"

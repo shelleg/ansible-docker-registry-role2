@@ -1,3 +1,5 @@
+---
+
 - name: uname_r
   command: uname -r
   register: uname_r_value
@@ -13,11 +15,8 @@
     - lxc
     - iptables
 
-
 - apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80  id=58118E89F3A912897C070ADBF76221572C52609D
-
 - file: path=/etc/apt/sources.list.d/docker.list state=touch
-
 - name: configure OS
   lineinfile: dest=/etc/apt/sources.list.d/docker.list regexp="^deb" line="deb https://apt.dockerproject.org/repo ubuntu-trusty main"
 
@@ -28,21 +27,15 @@
 - apt: update_cache=yes
 #- apt: purge=true
 
-#- name: Install pip
-#  easy_install:
-#      name=pip
+- name: Install pip
+  easy_install:
+      name=pip
 
-#- name: Install docker-py
-#  pip:
-#      name=docker-py
-#      state=present
-#      version=1.1.0
-
-#- command: apt-get purge lxc-docker
-#- command: apt-cache policy docker-engine
+- name: Install docker-py
+  pip:
+      name=docker-py
 
 - debug: msg=install linux-image-extra-{{ uname_r_value.stdout }}
-
 - name: install linux-image-extra-{{ uname_r_value.stdout }}
   apt: name=linux-image-extra-{{ uname_r_value.stdout }} state=installed update_cache=yes
 
@@ -55,10 +48,15 @@
 - file: path=/etc/default/docker state=touch
 
 - name: configure proxy to docker
-  lineinfile: dest=/etc/default/docker regexp="^export http_proxy=" line="export http_proxy=http://web-proxy.il.hpecorp.net:8080/"
+  lineinfile: dest=/etc/default/docker regexp="^export http_proxy=" line="export http_proxy={{http_proxy}}/"
+  when: http_proxy is defined
 
 - name: configure proxy ssl to docker
-  lineinfile: dest=/etc/default/docker regexp="^export https_proxy=" line="export https_proxy=http://web-proxy.il.hpecorp.net:8080/"
+  lineinfile: dest=/etc/default/docker regexp="^export https_proxy=" line="export https_proxy={{http_proxy}}/"
+  when: http_proxy is defined
 
 - name: configure proxy ssl to docker
   lineinfile: dest=/etc/default/docker regexp=^DOCKER_OPTS= line=DOCKER_OPTS="--insecure-registry {{ansible_hostname}}.{{ansible_domain}}:5000"
+  when: http_proxy is defined
+
+- service: name=docker state=restarted
