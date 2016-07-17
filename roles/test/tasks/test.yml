@@ -1,7 +1,0 @@
----
-  #- hosts: localhost
-  #$- remote_user: root
-  #  tasks:
-    - name: hello world
-      shell: "echo hello world"
-    - debug: msg="System {{ inventory_hostname }} has uuid {{ ansible_product_uuid }}"
